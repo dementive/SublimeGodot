@@ -66,6 +66,15 @@ class GodotClassDocumentation:
         else:
             return ""
 
+    def get_link(self, item: str) -> str:
+        settings = sublime.load_settings("SublimeGodot.sublime-settings")
+        docs_url = settings.get("DocsURL") # type: str
+
+        if item:
+            return item.replace("$DOCS_URL", docs_url)
+        else:
+            return ""
+
     def generate_markdown(self):
         markdown_content = ""
         markdown_content += f"# {to_markdown(self.class_name)}"
@@ -74,7 +83,7 @@ class GodotClassDocumentation:
         markdown_content += f"{to_markdown(self.full_description)}\n"
 
         # Tutorials
-        tutorials_md = "\n".join([f"[{to_markdown(item['title'])}]({to_markdown(item['title'].lower().replace(' ', '_'))})" for item in self.tutorials])
+        tutorials_md = "\n".join([f"[{to_markdown(item['title'])}]({self.get_link(item['link'])})" for item in self.tutorials])
         
         # Signals
         signals_md = "\n".join([f"- **{to_markdown(item['name'])}**: {to_markdown(item['description'])}" for item in self.signals])
@@ -277,6 +286,7 @@ class ShowGodotDocsMarkdownCommand(sublime_plugin.WindowCommand):
         markdown = docs.generate_markdown()
         view = self.window.new_file()
         view.set_name(doc_class)
-        view.assign_syntax("scope:text.html.markdown")
+        view.assign_syntax("scope:text.html.markdown.godot")
         view.run_command("insert", {"characters": markdown})
+        view.show(sublime.Region(0,0))
         view.set_scratch(True)

@@ -1,4 +1,7 @@
 {
 	// The full path on your system to the "godot/docs/classes" directory with xml documentation of the godot repository.
 	"GodotDocumentationPath": ".../godot/doc/classes",
+
+	// The base URL to the documentation version you are using. If you are using a different branch of godot other than master change this to the URL to the godot-docs repo version you are using.
+	"DocsURL": "https://docs.godotengine.org/en/stable"
 }

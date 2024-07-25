@@ -10,7 +10,7 @@
 # The scope suffix should indicate which flavor of Markdown the feature came from,
 # to help make this syntax definition easier to maintain.
 name: GDMarkdown
-scope: text.html.markdown
+scope: text.html.markdown.godot
 version: 2
 
 file_extensions:
