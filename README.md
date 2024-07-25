@@ -16,6 +16,18 @@ The way I convert the XML docs to markdown is super lazy and definitely not perf
 
 Should work with any version of Godot.
 
+## How to Install
+
+Run the following script in the Sublime Text terminal ```(ctrl+` )``` which utilizes git clone for easy installation:
+```
+import os; path=sublime.packages_path(); (os.makedirs(path) if not os.path.exists(path) else None); window.run_command('exec', {'cmd': ['git', 'clone', 'https://github.com/dementive/SublimeGodot', 'SublimeGodot'], 'working_dir': path})
+```
+
+Alternatively you can download the zip file from github and put the SublimeGodot folder (make sure it is named SublimeGodot) in the packages folder.
+The packages folder can easily be found by going to ```preferences``` in the main menu and selecting ```Browse Packages```. The full path to the plugin should look like this:
+```
+C:\Users\YOURUSERNAME\AppData\Roaming\Sublime Text 3\Packages\SublimeGodot
+```
 
 ## Other plugins
 If you are going to do any kind of scripting in sublime I highly recommend installing and setting up these plugins:
