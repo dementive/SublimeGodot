@@ -1,0 +1,4 @@
+{
+	// The full path on your system to the "godot/docs/classes" directory with xml documentation of the godot repository.
+	"GodotDocumentationPath": ".../godot/doc/classes",
+}

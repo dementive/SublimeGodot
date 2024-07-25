@@ -1,0 +1,9 @@
+[
+	{
+		"caption": "Show Godot Documentation (Markdown)",
+		"command": "show_godot_docs_markdown",
+		"args": {
+
+		},
+	},
+]

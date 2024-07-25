@@ -1,0 +1,32 @@
+[
+	{
+		"caption": "Preferences",
+		"id": "preferences",
+		"children":
+		[
+			{
+				"caption": "Package Settings",
+				"id": "package-settings",
+				"children":
+				[
+					{
+						"caption": "Sublime Godot",
+						"id": "gd_tools",
+						"children":
+						[
+							{
+								"caption": "Settings",
+								"command": "edit_settings",
+								"args":
+								{
+									"base_file": "${packages}/SublimeGodot/SublimeGodot.sublime-settings",
+									"user_file": "${packages}/User/SublimeGodot.sublime-settings"
+								}
+							}
+						]
+					}
+				]
+			}
+		]
+	}
+]
