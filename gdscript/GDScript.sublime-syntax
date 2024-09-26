@@ -99,9 +99,9 @@ contexts:
       captures:
         1: storage.type.enum.gdscript
         2: entity.name.type.gdscript
-    - match: \b(?i:extends|assert|breakpoint)\b
+    - match: \b(?i:extends|assert|breakpoint|class_name)\b
       scope: keyword.other.gdscript
-    - match: '(?<=extends)\s+{{identifier}}(\.({{identifier}}))?'
+    - match: '(?<=extends|class_name)\s+{{identifier}}(\.({{identifier}}))?'
       scope: entity.other.inherited-class.gdscript
     - match: \b(?i:true|false|null)\b
       scope: constant.language.gdscript

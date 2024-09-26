@@ -1,0 +1,30 @@
+<snippet>
+	<content><![CDATA[
+#ifndef ${1:ClassName}_H
+#define ${1:ClassName}_H
+
+#include <godot_cpp/classes/object.hpp>
+
+using namespace godot;
+
+namespace ${2:Namespace} {
+
+class ${1:ClassName} : public Object {
+	GDCLASS(${1:ClassName}, Object)
+
+protected:
+	static void _bind_methods() {}
+
+public:
+	${1:ClassName}() {}
+};
+
+} // namespace ${2:Namespace}
+
+#endif // ${1:ClassName}_H
+]]></content>
+	<!-- ${1:Selection Field 1}.${2:Selection Field 2} -->
+	<tabTrigger>GDCLASS</tabTrigger>
+	<scope>source.c++</scope>
+	<description>Create a basic GDExtension class.</description>
+</snippet>

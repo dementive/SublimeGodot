@@ -427,7 +427,41 @@ contexts:
       scope: punctuation.terminator.c++
 
   comments:
-    - include: scope:source.c#comments
+    - match: ^/\* =(\s*.*?)\s*= \*/$\n?
+      scope: comment.block.c
+      captures:
+        1: meta.toc-list.banner.block.c
+    - match: /\*
+      scope: punctuation.definition.comment.c
+      push:
+        - meta_scope: comment.block.c
+        - match: \*/
+          scope: punctuation.definition.comment.c
+          pop: true
+        - match: ^\s*(\*)(?!/)
+          captures:
+            1: punctuation.definition.comment.c
+    - match: \*/(?!\*)
+      scope: invalid.illegal.stray-comment-end.c
+    - match: ^// =(\s*.*?)\s*=\s*$\n?
+      scope: comment.line.banner.c
+      captures:
+        1: meta.toc-list.banner.line.c
+    - match: //
+      scope: punctuation.definition.comment.c
+      push:
+        - meta_scope: comment.line.double-slash.c
+        - match: \bTODO\b
+          scope: string
+        - match: \bFIXME|BUG\b
+          scope: keyword
+        - match: \bNOTE|OPTIMIZE|OPTIMIZATION\b
+          scope: entity.name
+        - match: '(\\)$\n'
+          captures:
+            1: punctuation.separator.continuation.c
+        - match: \n
+          pop: true
 
   operators:
     - include: scope:source.c#operators
@@ -1080,6 +1114,10 @@ contexts:
 
   global-type:
     - include: comments
+    - match: ({{GODOT_VARIANT_TYPES}})
+      scope: storage.type
+    - match: ({{CUSTOM_TYPES}})
+      scope: storage.type
     - match: \*|&
       scope: keyword.operator.c++
     - match: '(?=\b({{control_keywords}}|{{operator_keywords}}|{{casts}}|{{memory_operators}}|{{other_keywords}}|operator)\b)'
@@ -1215,6 +1253,10 @@ contexts:
               set: function-definition-continue
             - match: '\bvoid\b'
               scope: storage.type.c++
+            - match: ({{GODOT_VARIANT_TYPES}})
+              scope: storage.type
+            - match: ({{CUSTOM_TYPES}})
+              scope: storage.type
             - match: '{{identifier}}(?=\s*(\[|,|\)|=))'
               scope: variable.parameter.c++
             - match: '='
