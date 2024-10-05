@@ -1,0 +1,34 @@
+%YAML 1.2
+---
+name: Godot CSV Translation
+scope: godot.csv
+file_extensions:
+  - csv
+
+variables:
+  valid_variable: '[A-Za-z_][A-Za-z_0-9]*'
+
+contexts:
+  main:
+    - match: ','
+      scope: keyword
+    - match: '"'
+      push: string
+
+  string:
+    - meta_scope: string.quoted.double.c
+    - match: \\.
+      scope: constant.character.escape.c
+    - match: '%(s|c|d|o|x|X|f|v)'
+      scope: constant.numeric
+    - match: \{
+      scope: keyword
+      push: format-string
+    - match: '"'
+      pop: true
+
+  format-string:
+    - meta_scope: variable.parameter
+    - match: \}
+      scope: keyword
+      pop: true
