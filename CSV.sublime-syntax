@@ -10,6 +10,8 @@ variables:
 
 contexts:
   main:
+    - match: \,\,.*
+      scope: comment
     - match: ','
       scope: keyword
     - match: '"'
