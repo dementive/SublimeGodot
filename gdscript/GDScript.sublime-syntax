@@ -15,6 +15,9 @@ variables:
   # and `func f(_)` are illegal. `func _()` and `_()`, however, are legal so this
   # inconsistency might be a Godot bug.
   identifier: \b[a-zA-Z_][a-zA-Z_0-9]*\b
+  red_comments: \b(ALERT|ATTENTION|CAUTION|CRITICAL|DANGER|SECURITY)\b
+  yellow_comments: \b(BUG|DEPRECATED|FIXME|HACK|TASK|TBD|TODO|WARNING)\b
+  green_comments: \b(INFO|NOTE|NOTICE|TEST|TESTING)\b
 
 contexts:
   prototype:
@@ -115,10 +118,20 @@ contexts:
         4: variable.function.getter.gdscript
 
   comments:
-    - match: (#).*
-      scope: comment.line.number-sign.gdscript
-      captures:
-        1: punctuation.definition.comment.number-sign.gdscript
+    - match: \#
+      push:
+      - meta_scope: comment
+      - include: special-comments
+      - match: \n
+        pop: true
+
+  special-comments:
+    - match: ({{red_comments}})
+      scope: keyword
+    - match: ({{yellow_comments}})
+      scope: string
+    - match: ({{green_comments}})
+      scope: entity.name
 
   strings:
     - match: \"""

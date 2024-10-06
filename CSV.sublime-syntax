@@ -7,11 +7,14 @@ file_extensions:
 
 variables:
   valid_variable: '[A-Za-z_][A-Za-z_0-9]*'
+  red_comments: \b(ALERT|ATTENTION|CAUTION|CRITICAL|DANGER|SECURITY)\b
+  yellow_comments: \b(BUG|DEPRECATED|FIXME|HACK|TASK|TBD|TODO|WARNING)\b
+  green_comments: \b(INFO|NOTE|NOTICE|TEST|TESTING)\b
 
 contexts:
   main:
-    - match: \,\,.*
-      scope: comment
+    - match: \,\,
+      push: comments
     - match: ','
       scope: keyword
     - match: '"'
@@ -34,3 +37,17 @@ contexts:
     - match: \}
       scope: keyword
       pop: true
+
+  comments:
+    - meta_scope: comment
+    - include: special-comments
+    - match: \n
+      pop: true
+
+  special-comments:
+    - match: ({{red_comments}})
+      scope: keyword
+    - match: ({{yellow_comments}})
+      scope: string
+    - match: ({{green_comments}})
+      scope: entity.name
