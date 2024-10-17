@@ -108,7 +108,7 @@ contexts:
       scope: entity.other.inherited-class.gdscript
     - match: \b(?i:true|false|null)\b
       scope: constant.language.gdscript
-    - match: \b(?i:export|tool)\b
+    - match: \b(?i:export|tool|export_group|export_subgroup|export_category|export_file|export_global_file|export_global_dir|export_multiline|export_range|export_exp_easing|export_color_no_alpha|export_node_path|export_flags|export_flags_2d_physics|export_flags_2d_render|export_flags_2d_navigation|export_flags_3d_physics|export_flags_3d_render|export_flags_3d_navigation|export_enum|export_storage)\b
       scope: storage.modifier.static.gdscript
     - match: \b(setget)\b\s*({{identifier}})?\s*(,)?\s*({{identifier}})?
       captures:

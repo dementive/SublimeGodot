@@ -1,9 +1,9 @@
 %YAML 1.2
 ---
-name: Godot CSV Translation
-scope: godot.csv
+name: Godot Localization
+scope: godot.loc
 file_extensions:
-  - csv
+  - loc
 
 variables:
   valid_variable: '[A-Za-z_][A-Za-z_0-9]*'
@@ -13,23 +13,46 @@ variables:
 
 contexts:
   main:
-    - match: \,\,
+    - match: \#
       push: comments
-    - match: ','
+    - match: ',|:'
       scope: keyword
     - match: '"'
       push: string
+    - match: \$
+      scope: keyword
+      push:
+        - meta_scope: variable.parameter
+        - match: ({{valid_variable}})|\n
+          pop: true
 
   string:
-    - meta_scope: string.quoted.double.c
-    - match: \\.
-      scope: constant.character.escape.c
+    - meta_scope: string
     - match: '%(s|c|d|o|x|X|f|v)'
+      scope: constant.numeric
+    - match: \\(t|n|r|a|b|f|v)
       scope: constant.numeric
     - match: \{
       scope: keyword
       push: format-string
+    - match: \$
+      scope: keyword
+      push:
+        - meta_scope: variable.parameter
+        - match: \$
+          scope: keyword
+          pop: true
+        - match: \"|\n
+          scope: string
+          pop: 2
+
     - match: '"'
+      scope: string
+      push:
+        - match: \n
+          pop: 2
+        - match: \#
+          push: comments
       pop: true
 
   format-string:
@@ -42,7 +65,7 @@ contexts:
     - meta_scope: comment
     - include: special-comments
     - match: \n
-      pop: true
+      pop: 2
 
   special-comments:
     - match: ({{red_comments}})
