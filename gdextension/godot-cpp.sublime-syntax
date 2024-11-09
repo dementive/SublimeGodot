@@ -102,31 +102,6 @@ contexts:
     - match: \b(Ref|real_t|Error)\b # not variant types but extremely common in godot source code.
       scope: storage.type.c++
 
-  # Hack to color unique node names used in the get_node function
-  godot-get-node-unique-name:
-    - match: get_node
-      scope: variable.function.c++
-      push:
-        - match: \>
-          scope: keyword
-        - match: \<
-          scope: keyword
-        - match: \"
-          scope: string
-          push:
-            - match: '{{identifier}}'
-              scope: string
-            - match: \%
-              scope: constant.numeric
-              push:
-                - match: '{{identifier}}'
-                  scope: entity.name
-                - match: \"
-                  scope: string
-                  pop: 1
-            - match: ';|\n'
-              pop: 2
-
   #############################################################################
   # Reusable contexts
   #
@@ -534,9 +509,65 @@ contexts:
     - include: types-parens
     - include: scope:source.c#types
 
+  c-strings:
+    - match: '(L|u8|u|U)?("\%)'
+      scope: constant.numeric
+      captures:
+        1: storage.type.string.c
+        2: punctuation.definition.string.begin.c
+      push:
+        - meta_scope: entity.name
+        - match: '"'
+          scope: punctuation.definition.string.end.c
+          pop: true
+        - include: string_escaped_char
+        - include: string_placeholder
+    - match: '(L|u8|u|U)?(")'
+      captures:
+        1: storage.type.string.c
+        2: punctuation.definition.string.begin.c
+      push:
+        - meta_scope: string.quoted.double.c
+        - match: '"'
+          scope: punctuation.definition.string.end.c
+          pop: true
+        - include: string_escaped_char
+        - include: string_placeholder
+    - match: "(L|u8|u|U)?(')"
+      captures:
+        1: storage.type.string.c
+        2: punctuation.definition.string.begin.c
+      push:
+        - meta_scope: string.quoted.single.c
+        - match: "'"
+          scope: punctuation.definition.string.end.c
+          pop: true
+        - include: string_escaped_char
+
+  string_escaped_char:
+    - match: '(\\)$\n'
+      captures:
+        1: punctuation.separator.continuation.c
+    - match: \\(?:\\|[abefnrtv\'"?]|[0-3][0-9]{0,2}|[4-7][0-9]?|x[a-fA-F0-9]+|u[a-fA-F0-9]{4}|U[a-fA-F0-9]{8})
+      scope: constant.character.escape.c
+    - match: \\.
+      scope: invalid.illegal.unknown-escape.c
+
+  string_placeholder:
+    - match: |-
+        (?x)%
+          (\d+\$)?                                      # field (argument #)
+          [#0\- +']*                                    # flags
+          [,;:_]?                                       # separator character (AltiVec)
+          ((-?\d+)|\*(-?\d+\$)?)?                       # minimum field width
+          (\.((-?\d+)|\*(-?\d+\$)?)?)?                  # precision
+          (hh|h|ll|l|j|t|z|q|L|vh|vl|v|hv|hl)?          # length modifier
+          (\[[^\]]+\]|[am]s|[diouxXDOUeEfFgGaACcSspn%]) # conversion type
+      scope: constant.other.placeholder.c
+
   strings:
     - include: unique-strings
-    - include: scope:source.c#strings
+    - include: c-strings
 
   ## C++-specific contexts
 
@@ -827,7 +858,7 @@ contexts:
             - include: template-common
 
   generic-type:
-    - include: godot-get-node-unique-name
+    #s- include: godot-get-node-unique-name
     - match: '(?=(?!template){{path_lookahead}}\s*{{generic_lookahead}}\s*(\(|\{))'
       push:
         - meta_scope: meta.function-call.c++
