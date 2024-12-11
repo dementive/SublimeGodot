@@ -328,26 +328,6 @@ contexts:
       push: global-modifier
     - include: late-expressions
 
-  block-comment-documentation-body:
-    - meta_include_prototype: false
-    - meta_scope: comment.block.documentation.c
-    - match: \*+/
-      scope: punctuation.definition.comment.end.c
-      pop: true
-    - match: ^\s*(\*)(?!\**/)
-      captures:
-        1: punctuation.definition.comment.c
-
-  block-comment-body:
-    - meta_include_prototype: false
-    - meta_scope: comment.block.c
-    - match: \*/
-      scope: punctuation.definition.comment.end.c
-      pop: true
-    - match: ^\s*(\*)(?!\**/)
-      captures:
-        1: punctuation.definition.comment.c
-
   global-block-comments:
     # NOTE: This context overrides `comments` context, which re-uses scopes
     # from `source.c#comments`. So keep the trailing `c` for consistency reasons!
@@ -366,21 +346,15 @@ contexts:
       scope: punctuation.definition.comment.begin.c
       push:
         - global-block-comment-after
+        - scope:source.c#block-comment-documentation-body
     # normal block comments
     - match: /\*
       scope: punctuation.definition.comment.begin.c
       push:
-        - block-comment-body
+        - global-block-comment-after
+        - scope:source.c#block-comment-body
 
   global-block-comment-after:
-    - include: block-comment-documentation-body
-    - match: \s*(?=\w)
-      set: global-modifier
-    - match: ''
-      pop: true
-
-  global-block-comment-after2:
-    - include: block-comment-body
     - match: \s*(?=\w)
       set: global-modifier
     - match: ''
@@ -509,65 +483,9 @@ contexts:
     - include: types-parens
     - include: scope:source.c#types
 
-  c-strings:
-    - match: '(L|u8|u|U)?("\%)'
-      scope: constant.numeric
-      captures:
-        1: storage.type.string.c
-        2: punctuation.definition.string.begin.c
-      push:
-        - meta_scope: entity.name
-        - match: '"'
-          scope: punctuation.definition.string.end.c
-          pop: true
-        - include: string_escaped_char
-        - include: string_placeholder
-    - match: '(L|u8|u|U)?(")'
-      captures:
-        1: storage.type.string.c
-        2: punctuation.definition.string.begin.c
-      push:
-        - meta_scope: string.quoted.double.c
-        - match: '"'
-          scope: punctuation.definition.string.end.c
-          pop: true
-        - include: string_escaped_char
-        - include: string_placeholder
-    - match: "(L|u8|u|U)?(')"
-      captures:
-        1: storage.type.string.c
-        2: punctuation.definition.string.begin.c
-      push:
-        - meta_scope: string.quoted.single.c
-        - match: "'"
-          scope: punctuation.definition.string.end.c
-          pop: true
-        - include: string_escaped_char
-
-  string_escaped_char:
-    - match: '(\\)$\n'
-      captures:
-        1: punctuation.separator.continuation.c
-    - match: \\(?:\\|[abefnrtv\'"?]|[0-3][0-9]{0,2}|[4-7][0-9]?|x[a-fA-F0-9]+|u[a-fA-F0-9]{4}|U[a-fA-F0-9]{8})
-      scope: constant.character.escape.c
-    - match: \\.
-      scope: invalid.illegal.unknown-escape.c
-
-  string_placeholder:
-    - match: |-
-        (?x)%
-          (\d+\$)?                                      # field (argument #)
-          [#0\- +']*                                    # flags
-          [,;:_]?                                       # separator character (AltiVec)
-          ((-?\d+)|\*(-?\d+\$)?)?                       # minimum field width
-          (\.((-?\d+)|\*(-?\d+\$)?)?)?                  # precision
-          (hh|h|ll|l|j|t|z|q|L|vh|vl|v|hv|hl)?          # length modifier
-          (\[[^\]]+\]|[am]s|[diouxXDOUeEfFgGaACcSspn%]) # conversion type
-      scope: constant.other.placeholder.c
-
   strings:
     - include: unique-strings
-    - include: c-strings
+    - include: scope:source.c#strings
 
   ## C++-specific contexts
 
@@ -858,7 +776,6 @@ contexts:
             - include: template-common
 
   generic-type:
-    #s- include: godot-get-node-unique-name
     - match: '(?=(?!template){{path_lookahead}}\s*{{generic_lookahead}}\s*(\(|\{))'
       push:
         - meta_scope: meta.function-call.c++
