@@ -31,7 +31,7 @@ contexts:
       scope: keyword
       push:
         - include: values
-
+    - match: \s
     - match: '.+'
       scope: invalid.config.tokens
 
@@ -46,7 +46,8 @@ contexts:
       push: comments
     - match: \n
       pop: 2
-    - match: \(|,|\s|\)|=
+    - match: \(|,|\s|\)|=|\.|\[|\]|}|{|
+    - match: ':'
     - match: '.+'
       scope: invalid.config.tokens
 
@@ -55,9 +56,10 @@ contexts:
     - match: '"'
       scope: string
       push:
+        - include: values
         - match: \n
           pop: 2
-        - match: \#
+        - match: \;
           push: comments
       pop: true
 
