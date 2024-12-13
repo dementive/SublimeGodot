@@ -8,7 +8,9 @@ file_extensions:
   - cfg
 
 variables:
-  valid_variable: '[A-Za-z_][A-Za-z_0-9]*'
+  valid_variable: '[A-Za-z_0-9][A-Za-z_0-9]*'
+  valid_section: '[A-Za-z_\s][A-Za-z_0-9\s]*'
+
   red_comments: \b(ALERT|ATTENTION|CAUTION|CRITICAL|DANGER|SECURITY)\b
   yellow_comments: \b(BUG|DEPRECATED|FIXME|HACK|TASK|TBD|TODO|WARNING)\b
   green_comments: \b(INFO|NOTE|NOTICE|TEST|TESTING)\b
@@ -20,7 +22,7 @@ contexts:
 
     - match: \[
       push:
-        - match: ({{valid_variable}})
+        - match: ({{valid_section}})
           scope: entity.name
         - match: \]|\n
           pop: true
@@ -31,7 +33,9 @@ contexts:
       scope: keyword
       push:
         - include: values
-    - match: \s
+    - match: '"'
+      push: string
+    - match: \s|}|{
     - match: '.+'
       scope: invalid.config.tokens
 
