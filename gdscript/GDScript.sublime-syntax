@@ -174,13 +174,13 @@ contexts:
     # calling ``new()``, but these don't
     #
     # https://docs.godotengine.org/en/3.1/getting_started/scripting/gdscript/gdscript_basics.html#built-in-types
-    - match: \b(?:bool|int|float|String|funcref)\b
+    - match: \b(?:bool|int|float|String|StringName|funcref)\b
       scope: storage.type.basic.gdscript
-    - match: '\b(?:Vector[23]|Rect2|Matrix32?|Plane|Quat|AABB|Transform)\b'
+    - match: '\b(?:Vector[23][i]?|Rect2[i]?|Matrix32?|Plane|Quat|AABB|Transform)\b'
       scope: storage.type.vector.gdscript
-    - match: \b(?:Color|Image|NodePath|RID|Object|InputEvent)\b
+    - match: \b(?:Color|Image|ImageTexture|Texture|NodePath|RID|Object|InputEvent)\b
       scope: storage.type.engine.gdscript
-    - match: '\b(Array|Dictionary|ByteArray|IntArray|FloatArray|StringArray|Vector[23]Array|ColorArray)\b'
+    - match: '\b(Array|Dictionary|PackedByteArray|PackedInt(32|64)Array|PackedFloat(32|64)Array|PackedStringArray|PackedVector[234]Array|PackedColorArray)\b'
       scope: storage.type.container.gdscript
 
   functions:
