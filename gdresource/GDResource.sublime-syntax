@@ -1,0 +1,153 @@
+%YAML 1.2
+---
+# http://www.sublimetext.com/docs/3/syntax.html
+# Generated from the official godot VSCode tmlanguage.json file, modified to list file extensions
+name: GDResource
+file_extensions:
+  - godot
+  - tres
+  - import
+  - gdns
+  - gdnlib
+  - tscn
+scope: source.gdresource
+contexts:
+  main:
+    - include: embedded_shader
+    - include: embedded_gdscript
+    - include: comment
+    - include: heading
+    - include: key_value
+  comment:
+    - match: (;).*$\n?
+      scope: comment.line.gdresource
+      captures:
+        1: punctuation.definition.comment.gdresource
+  data:
+    - include: comment
+    - match: '(?<!\w)(\{)\s*'
+      captures:
+        1: punctuation.definition.table.inline.gdresource
+      push:
+        - match: '\s*(\})(?!\w)'
+          captures:
+            1: punctuation.definition.table.inline.gdresource
+          pop: true
+        - include: key_value
+        - include: data
+    - match: '(?<!\w)(\[)\s*'
+      captures:
+        1: punctuation.definition.array.gdresource
+      push:
+        - match: '\s*(\])(?!\w)'
+          captures:
+            1: punctuation.definition.array.gdresource
+          pop: true
+        - include: data
+    - match: '"""'
+      push:
+        - meta_scope: string.quoted.triple.basic.block.gdresource
+        - match: '"""'
+          pop: true
+        - match: '\\([btnfr"\\\n/ ]|u[0-9A-Fa-f]{4}|U[0-9A-Fa-f]{8})'
+          scope: constant.character.escape.gdresource
+        - match: '\\[^btnfr/"\\\n]'
+          scope: invalid.illegal.escape.gdresource
+    - match: '"res:\/\/[^"\\]*(?:\\.[^"\\]*)*"'
+      scope: support.function.any-method.gdresource
+    - match: '(?<=type=)"[^"\\]*(?:\\.[^"\\]*)*"'
+      scope: support.class.library.gdresource
+    - match: '(?<=NodePath\(|parent=|name=)"[^"\\]*(?:\\.[^"\\]*)*"'
+      scope: constant.character.escape.gdresource
+    - match: '"'
+      push:
+        - meta_scope: string.quoted.double.basic.line.gdresource
+        - match: '"'
+          pop: true
+        - match: '\\([btnfr"\\\n/ ]|u[0-9A-Fa-f]{4}|U[0-9A-Fa-f]{8})'
+          scope: constant.character.escape.gdresource
+        - match: '\\[^btnfr/"\\\n]'
+          scope: invalid.illegal.escape.gdresource
+    - match: "'.*?'"
+      scope: string.quoted.single.literal.line.gdresource
+    - match: (?<!\w)(true|false)(?!\w)
+      scope: constant.language.gdresource
+    - match: '(?<!\w)([\+\-]?(0|([1-9](([0-9]|_[0-9])+)?))(?:(?:\.(0|([1-9](([0-9]|_[0-9])+)?)))?[eE][\+\-]?[1-9]_?[0-9]*|(?:\.[0-9_]*)))(?!\w)'
+      scope: constant.numeric.float.gdresource
+    - match: '(?<!\w)((?:[\+\-]?(0|([1-9](([0-9]|_[0-9])+)?))))(?!\w)'
+      scope: constant.numeric.integer.gdresource
+    - match: '(?<!\w)([\+\-]?inf)(?!\w)'
+      scope: constant.numeric.inf.gdresource
+    - match: '(?<!\w)([\+\-]?nan)(?!\w)'
+      scope: constant.numeric.nan.gdresource
+    - match: '(?<!\w)((?:0x(([0-9a-fA-F](([0-9a-fA-F]|_[0-9a-fA-F])+)?))))(?!\w)'
+      scope: constant.numeric.hex.gdresource
+    - match: '(?<!\w)(0o[0-7](_?[0-7])*)(?!\w)'
+      scope: constant.numeric.oct.gdresource
+    - match: '(?<!\w)(0b[01](_?[01])*)(?!\w)'
+      scope: constant.numeric.bin.gdresource
+    - match: (?<!\w)(Vector2|Vector2i|Vector3|Vector3i|Color|Rect2|Rect2i|Array|Basis|Dictionary|Plane|Quat|RID|Rect3|Transform|Transform2D|Transform3D|AABB|String|Color|NodePath|Object|PoolByteArray|PoolIntArray|PoolRealArray|PoolStringArray|PoolVector2Array|PoolVector3Array|PoolColorArray|bool|int|float|StringName|Quaternion|PackedByteArray|PackedInt32Array|PackedInt64Array|PackedFloat32Array|PackedFloat64Array|PackedStringArray|PackedVector2Array|PackedVector2iArray|PackedVector3Array|PackedVector3iArray|PackedColorArray)(\()\s?
+      captures:
+        1: support.class.library.gdresource
+      push:
+        - match: \s?(\))
+          pop: true
+        - include: key_value
+        - include: data
+    - match: (?<!\w)(ExtResource|SubResource)(\()\s?
+      captures:
+        1: keyword.control.gdresource
+      push:
+        - match: \s?(\))
+          pop: true
+        - include: key_value
+        - include: data
+  embedded_gdscript:
+    - match: (script/source) = "
+      comment: meta.embedded.block.gdscript
+      captures:
+        1: variable.other.property.gdresource
+      push:
+        - match: '"'
+          pop: true
+        - include: scope:source.gdscript
+  embedded_shader:
+    - match: (code) = "
+      captures:
+        1: variable.other.property.gdresource
+      push:
+        - meta_scope: meta.embedded.block.gdshader
+        - match: '"'
+          pop: true
+        - include: scope:source.gdshader
+  heading:
+    - match: '\[([a-z_]*)\s?'
+      captures:
+        1: keyword.control.gdresource
+      push:
+        - match: '\]'
+          pop: true
+        - include: heading_properties
+        - include: data
+  heading_properties:
+    - match: '(\s*[A-Za-z_\-][A-Za-z0-9_\-]*\s*=)(?=\s*$)'
+      scope: invalid.illegal.noValue.gdresource
+    - match: '\s*([A-Za-z_-][^\s]*|".+"|''.+''|[0-9]+)\s*(=)\s*'
+      captures:
+        1: variable.other.property.gdresource
+        2: punctuation.definition.keyValue.gdresource
+      push:
+        - match: '($|(?==)|\,?|\s*(?=\}))'
+          pop: true
+        - include: data
+  key_value:
+    - match: '(\s*[A-Za-z_\-][A-Za-z0-9_\-]*\s*=)(?=\s*$)'
+      scope: invalid.illegal.noValue.gdresource
+    - match: '\s*([A-Za-z_-][^\s]*|".+"|''.+''|[0-9]+)\s*(=)\s*'
+      captures:
+        1: variable.other.property.gdresource
+        2: punctuation.definition.keyValue.gdresource
+      push:
+        - match: '($|(?==)|\,|\s*(?=\}))'
+          pop: true
+        - include: data
