@@ -57,7 +57,7 @@ contexts:
       scope: support.function.any-method.gdresource
     - match: '(?<=type=)"[^"\\]*(?:\\.[^"\\]*)*"'
       scope: support.class.library.gdresource
-    - match: '(?<=NodePath\(|parent=|name=)"[^"\\]*(?:\\.[^"\\]*)*"'
+    - match: '(?<=NodePath\(|parent=)"[^"\\]*(?:\\.[^"\\]*)*"'
       scope: constant.character.escape.gdresource
     - match: '"'
       push:

@@ -6,15 +6,34 @@ name: GDScript
 file_extensions:
   - gd
 scope: source.gdscript
+
+variables:
+  red_comments: \b(ALERT|ATTENTION|CAUTION|CRITICAL|DANGER|SECURITY)\b
+  yellow_comments: \b(BUG|DEPRECATED|FIXME|HACK|TASK|TBD|TODO|WARNING)\b
+  green_comments: \b(INFO|NOTE|NOTICE|TEST|TESTING)\b
+
 contexts:
   main:
     - include: statement
     - include: expression
+
   comment:
-    - match: (##|#).*$\n?
-      scope: comment.line.number-sign.gdscript
-      captures:
-        1: punctuation.definition.comment.number-sign.gdscript
+    - match: \#
+      push: comments
+
+  comments:
+    - meta_scope: comment
+    - include: special-comments
+    - match: \n
+      pop: 2
+
+  special-comments:
+    - match: ({{red_comments}})
+      scope: keyword.special.comment
+    - match: ({{yellow_comments}})
+      scope: string.special.comment
+    - match: ({{green_comments}})
+      scope: entity.name.special.comment
   annotated_parameter:
     - match: '(?x)\s* ([a-zA-Z_]\w*) \s* (:)\s* ([a-zA-Z_]\w*)?'
       captures:
