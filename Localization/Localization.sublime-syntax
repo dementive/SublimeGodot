@@ -65,7 +65,7 @@ contexts:
     - meta_scope: comment
     - include: special-comments
     - match: \n
-      pop: 2
+      pop: 1
 
   special-comments:
     - match: ({{red_comments}})
