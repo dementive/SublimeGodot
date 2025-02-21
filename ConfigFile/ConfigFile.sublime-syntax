@@ -40,18 +40,23 @@ contexts:
       scope: invalid.config.tokens
 
   values:
+    - match: \n
+      pop: 2
     - match: (String|Vector2|Vector2i|Rect2|Rect2i|Vector3|Vector3i|Transform2D|Vector4|Vector4i|Plane|Quaternion|AABB|Basis|Transform3D|Projection|Color|StringName|NodePath|RID|ObjectID|Object|Callable|Signal|Dictionary|Array|PackedByteArray|PackedInt32Array|PackedInt64Array|PackedFloat32Array|PackedFloat64Array|PackedStringArray|PackedVector2Array|PackedVector3Array|PackedColorArray|PackedVector4Array)
       scope: storage.type
-    - match: \d
+    - match: -?\d
       scope: constant.numeric
     - match: '"'
       push: string
+    - match: false|true|null
+      scope: constant.numeric
+    - match: \w+
     - match: \;
       push: comments
-    - match: \n
-      pop: 2
     - match: \(|,|\s|\)|=|\.|\[|\]|}|{|
+      scope: punctuation.config.token
     - match: ':'
+      scope: punctuation.config.token
     - match: '.+'
       scope: invalid.config.tokens
 
@@ -59,19 +64,13 @@ contexts:
     - meta_scope: string
     - match: '"'
       scope: string
-      push:
-        - include: values
-        - match: \n
-          pop: 2
-        - match: \;
-          push: comments
       pop: true
 
   comments:
     - meta_scope: comment
     - include: special-comments
     - match: \n
-      pop: 1
+      pop: 2
 
   special-comments:
     - match: ({{red_comments}})
