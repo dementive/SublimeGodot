@@ -29,11 +29,53 @@ The packages folder can easily be found by going to ```preferences``` in the mai
 C:\Users\YOURUSERNAME\AppData\Roaming\Sublime Text 3\Packages\SublimeGodot
 ```
 
-## Other plugins
-If you are going to do any kind of scripting in sublime I highly recommend installing and setting up these plugins:
+## Godot LSP setup
 
-- [Terminus](https://packagecontrol.io/packages/Terminus) - Fully working terminal directly in sublime text. Very useful for managing, running, or compiling your Godot project from directly in sublime.
-- [LSP](https://packagecontrol.io/packages/LSP) - Language Server support that turns sublime into a full feature IDE for GDscript, C++, CSharp, or any other language.
+I highly recommend setting up LSP. The LSP built into Godot can be hooked up to sublime and provides a lot of really nice features like error checking, auto complete, goto definition, hover documentation, and more.
+
+First you'll need to install the [LSP](https://packagecontrol.io/packages/LSP) plugin for sublime. Then go to `Preferences->Package Settings->LSP->Settings` this will open up the `LSP.sublime-settings` file.
+
+Next you need to add the Godot client to your LSP configuration, here is an example configuration:
+
+```
+{
+    "clients": 
+    {
+        "gdscript-lsp":
+        {
+            "enabled": true,
+            "command": [
+                "~/.local/bin/godot",
+                "--editor",
+                "~/path_to_your_project/project.godot",
+                "--quiet",
+                "--headless"
+            ],
+            "selector": "source.gdscript",
+            "tcp_port": 6005
+        }
+    }
+}
+```
+
+Replace the first argument in the "command" array with the actual path to the godot binary on your system. You'll also need to replace the second argument with the path to your project.godot file since by default godot opens the project selection list, so for the LSP to run it needs to actually run your project.
+
+This setup is nice if you only work on one project but if you often move between different projects you might want to use a simpler configuration instead:
+```
+{
+    "clients": 
+    {
+        "gdscript-lsp":
+        {
+            "enabled": true,
+            "selector": "source.gdscript",
+            "tcp_port": 6005
+        }
+    }
+}
+```
+
+With this config the LSP will only work when you have your godot project open in the editor because it can't start the server itself, but the configuration is simpler and easier to setup.
 
 ## Screenshots
 

@@ -22,7 +22,7 @@ contexts:
       push: comments
 
   comments:
-    - meta_scope: comment
+    - meta_scope: comment.line
     - include: special-comments
     - match: \n
       pop: 1
