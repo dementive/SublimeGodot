@@ -9,7 +9,7 @@ file_extensions:
 
 variables:
   valid_variable: '[A-Za-z_0-9][A-Za-z_0-9]*'
-  valid_section: '[A-Za-z_\s][A-Za-z_0-9\s]*'
+  valid_section: '[A-Za-z_\s\d][A-Za-z_0-9\s]*'
 
   red_comments: \b(ALERT|ATTENTION|CAUTION|CRITICAL|DANGER|SECURITY)\b
   yellow_comments: \b(BUG|DEPRECATED|FIXME|HACK|TASK|TBD|TODO|WARNING)\b
@@ -19,6 +19,11 @@ contexts:
   main:
     - match: \;
       push: comments
+
+    - match: ':'
+      scope: punctuation.config.token
+    - match: ','
+      scope: punctuation.config.token
 
     - match: \[
       push:
@@ -35,7 +40,7 @@ contexts:
         - include: values
     - match: '"'
       push: string
-    - match: \s|}|{
+    - match: \s|}|{|\)|]
     - match: '.+'
       scope: invalid.config.tokens
 
@@ -53,7 +58,7 @@ contexts:
     - match: \w+
     - match: \;
       push: comments
-    - match: \(|,|\s|\)|=|\.|\[|\]|}|{|
+    - match: \(|,|\s|\)|=|\.|\[|\]|}|{
       scope: punctuation.config.token
     - match: ':'
       scope: punctuation.config.token
