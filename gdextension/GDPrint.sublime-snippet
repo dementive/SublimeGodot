@@ -1,6 +1,0 @@
-<snippet>
-	<content><![CDATA[UtilityFunctions::print("${1:text}");]]></content>
-	<tabTrigger>GDPrint</tabTrigger>
-	<scope>source.c++</scope>
-	<description>UtilityFunctions::print</description>
-</snippet>

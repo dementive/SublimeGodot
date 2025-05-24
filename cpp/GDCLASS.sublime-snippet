@@ -2,9 +2,7 @@
 	<content><![CDATA[
 #pragma once
 
-#include <godot_cpp/classes/object.hpp>
-
-using namespace godot;
+#include "core/object/class_db.h"
 
 namespace ${2:Namespace} {
 

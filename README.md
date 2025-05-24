@@ -58,7 +58,7 @@ Next you need to add the Godot client to your LSP configuration, here is an exam
 }
 ```
 
-Replace the first argument in the "command" array with the actual path to the godot binary on your system. You'll also need to replace the second argument with the path to your project.godot file since by default godot opens the project selection list, so for the LSP to run it needs to actually run your project.
+Replace the first argument in the "command" array with the actual path to the godot binary on your system. You'll also need to replace the third argument with the path to your project.godot file since by default godot opens the project selection list, so for the LSP to run it needs to actually run your project.
 
 This setup is nice if you only work on one project but if you often move between different projects you might want to use a simpler configuration instead:
 ```
