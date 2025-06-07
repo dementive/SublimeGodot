@@ -77,6 +77,29 @@ This setup is nice if you only work on one project but if you often move between
 
 With this config the LSP will only work when you have your godot project open in the editor because it can't start the server itself, but the configuration is simpler and easier to setup.
 
+
+## Godot Debugger setup
+
+The [SublimeDebugger](https://github.com/daveleroy/SublimeDebugger) plugin adds support for the Debug Adapter Protocol, however it does not have direct support for the gdscript debugger, it is possible but im not sure how to set it up and have just used the gdscript debugger in the godot editor instead.
+
+If you are trying to debug C++ SublimeDebugger can use either lldb or gdb for debugging. To setup lldb follow the instructions in the SublimeDebugger readme to install the adaptor and then add the following to your .sublime-project file:
+
+```
+"debugger_configurations":
+[
+    {
+        "args": ["scenes/main.tscn"], // godot command line args, path to main scene to run.
+        "cwd": "<path/to/project.godot folder>",
+        "expressions": "simple",
+        "name": "lldb",
+        "program": "<path/to/godot binary>",
+        "request": "launch",
+        "sourceLanguages": ["cpp"],
+        "type": "lldb"
+    }
+],
+```
+
 ## Screenshots
 
 ![Screenshot 1](/assets/1.png)
