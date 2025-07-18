@@ -16,65 +16,10 @@ contexts:
     - include: expression
 
   comment:
-    - match: '#(if|else|endif|include)'
+    - match: '#(if|else|endif|include|define)'
       scope: keyword.special.comment
     - match: \#
       push: comments
-
-  double-quoted-docstrings:
-    - match: ^\s*(?i)(""")
-      captures:
-        1: comment.block.documentation.python punctuation.definition.comment.begin.python
-      push: maybe-double-quoted-docstring-summery
-
-  maybe-double-quoted-docstring-summery:
-    - meta_content_scope: comment.block.documentation.python
-    - include: double-quoted-docstring-end
-    - match: (?=\S)
-      set: double-quoted-docstring-summery
-
-  double-quoted-docstring-summery:
-    - meta_content_scope: comment.block.documentation.summary.python
-    - match: $
-      set: double-quoted-docstring-body
-    - include: double-quoted-docstring-body
-
-  double-quoted-docstring-end:
-    - match: '"""'
-      scope: comment.block.documentation.python punctuation.definition.comment.end.python
-      pop: 1
-
-  double-quoted-docstring-body:
-    - meta_content_scope: comment.block.documentation.python
-    - include: double-quoted-docstring-end
-
-  block-comments:
-    - match: ^(/\*) =\s*(.*?)\s*= (\*/)$\n?
-      scope: comment
-      captures:
-        1: punctuation.definition.comment.begin.c
-        2: meta.toc-list.banner.block.c
-        3: punctuation.definition.comment.end.c
-    # empty block comments
-    - match: /\*\*+/
-      scope: comment.block.empty.c punctuation.definition.comment.c
-    # normal block comments
-    - match: /\*
-      scope: punctuation.definition.comment.begin.c
-      push: block-comment-body
-    # stray block comment end
-    - match: \*+/(?!\*)
-      scope: invalid.illegal.stray-comment-end.c
-
-  block-comment-body:
-    - meta_include_prototype: false
-    - meta_scope: comment.block.c
-    - match: \*/
-      scope: punctuation.definition.comment.end.c
-      pop: true
-    - match: ^\s*(\*)(?!\**/)
-      captures:
-        1: punctuation.definition.comment.c
 
   comments:
     - meta_scope: comment.line
@@ -141,7 +86,6 @@ contexts:
       scope: keyword.operator.assignment.gdscript
   base_expression:
     - include: double-quoted-docstrings
-    - include: block-comments
     - include: builtin_get_node_shorthand
     - include: nodepath_object
     - include: nodepath_function
@@ -339,7 +283,7 @@ contexts:
         - include: parameters
         - include: line_continuation
   keywords:
-    - match: \b(?:class_name|abstract|is|const|constexpr|consteval|onready|tool|static|export|export_dir|export_color_no_alpha|as|void|assert|breakpoint|sync|remote|master|puppet|slave|remotesync|mastersync|puppetsync|trait|namespace)\b
+    - match: \b(?:class_name|abstract|is|const|constexpr|consteval|using|onready|tool|static|export|export_dir|export_color_no_alpha|as|void|assert|breakpoint|sync|remote|master|puppet|slave|remotesync|mastersync|puppetsync|trait|namespace)\b
       scope: keyword.language.gdscript
   lambda_declaration:
     - match: (func|fn)\s?(?=\()
@@ -456,7 +400,6 @@ contexts:
             1: variable.parameter.function.language.gdscript
             2: punctuation.separator.parameters.gdscript
         - include: comment
-        - include: block-comments
         - include: loose_default
   round_braces:
     - match: \(
